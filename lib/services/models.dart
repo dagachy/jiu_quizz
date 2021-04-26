@@ -12,7 +12,6 @@ class Option {
   }
 }
 
-
 class Report {
   String uid;
   int total;
@@ -29,7 +28,6 @@ class Report {
   }
 }
 
-
 class Question {
   String text;
   List<Option> options;
@@ -38,10 +36,10 @@ class Question {
 
   Question.fromMap(Map data) {
     text = data['text'] ?? '';
-    options = (data['options'] as List ?? []).map((v) => Option.fromMap(v)).toList();
+    options =
+        (data['options'] as List ?? []).map((v) => Option.fromMap(v)).toList();
   }
 }
-
 
 class Quiz {
   String id;
@@ -51,20 +49,26 @@ class Quiz {
   String topic;
   List<Question> questions;
 
-  Quiz({this.title, this.questions, this.video, this.description, this.id, this.topic});
+  Quiz(
+      {this.title,
+      this.questions,
+      this.video,
+      this.description,
+      this.id,
+      this.topic});
 
   factory Quiz.fromMap(Map data) {
     return Quiz(
-      id: data['id'] ?? '',
-      title: data['title'] ?? '',
-      topic: data['topic'] ?? '',
-      description: data['description'] ?? '',
-      video: data['video'] ?? '',
-      questions: (data['questions'] as List ?? []).map((v) => Question.fromMap(v)).toList()
-    );
+        id: data['id'] ?? '',
+        title: data['title'] ?? '',
+        topic: data['topic'] ?? '',
+        description: data['description'] ?? '',
+        video: data['video'] ?? '',
+        questions: (data['questions'] as List ?? [])
+            .map((v) => Question.fromMap(v))
+            .toList());
   }
 }
-
 
 class Topic {
   final String id;
@@ -76,12 +80,13 @@ class Topic {
   Topic({this.id, this.title, this.description, this.img, this.quizzes});
 
   factory Topic.fromMap(Map data) {
-    return Topic (
+    return Topic(
       id: data['id'] ?? '',
       title: data['title'] ?? '',
       description: data['description'] ?? '',
       img: data['img'] ?? 'default.png',
-      quizzes: (data['quizzes'] as List ?? []).map((v) => Quiz.fromMap(v)).toList(),
+      quizzes:
+          (data['quizzes'] as List ?? []).map((v) => Quiz.fromMap(v)).toList(),
     );
   }
 }

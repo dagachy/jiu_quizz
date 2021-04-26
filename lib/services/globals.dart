@@ -1,7 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'services.dart';
 
-
 /// Static global staet. Immutable services that do not care about build context.
 class Global {
   // App Data
@@ -19,5 +18,6 @@ class Global {
 
   // Firestore References for Writes
   static final Collection<Topic> topicsRef = Collection<Topic>(path: 'topics');
-  static final UserData<Report> reportRef = UserData<Report>(collection: 'reports');
+  static final UserData<Report> reportRef =
+      UserData<Report>(collection: 'reports');
 }

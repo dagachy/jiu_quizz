@@ -41,6 +41,12 @@ dependencies:
 
   provider: ^5.0.0
 
+  rxdart: ^0.26.0
+
+  google_sign_in: ^5.0.2
+
+  font_awesome_flutter: ^9.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -60,6 +60,10 @@ dependencies {
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:27.1.0')
 
+    // Declare the dependency for the Cloudfirestore library
+    // When using the BoM, you don't specify version in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-firestore'
+
     // Add the dependency for the Firebase SDK for Google Analytics
     // When using the BoM, don't specify version in Firebase dependencies
     implementation 'com.google.firebase:firebase-analytics'
