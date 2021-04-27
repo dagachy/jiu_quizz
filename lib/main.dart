@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'services/services.dart';
-
-import 'tabs_page.dart';
+import 'screens/screens.dart';
+import 'shared/shared.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,21 +26,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      StreamProvider<Report>.value(value: Global.reportRef.documentStream),
-      StreamProvider<User>.value(value: AuthService().user),
-    ]);
-    // return MaterialApp(
-    //   title: 'Firebase Analytics Demo',
-    //   theme: ThemeData(
-    //     primarySwatch: Colors.blue,
-    //   ),
-    //   navigatorObservers: <NavigatorObserver>[observer],
-    //   home: MyHomePage(
-    //     title: 'Firebase Analytics Demo',
-    //     analytics: analytics,
-    //     observer: observer,
-    //   ),
-    // );
+    return MultiProvider(
+      providers: [
+        StreamProvider<Report>.value(value: Global.reportRef.documentStream),
+        StreamProvider<User>.value(value: AuthService().user),
+      ],
+      child: MaterialApp(
+        // Firebase Analytics
+        navigatorObservers: [
+          FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+        ],
+
+        // Named Routes
+        routes: {
+          '/': (context) => LoginScreen(),
+          '/topics': (conetxt) => TopicsScreen(),
+          '/profile': (context) => ProfileScreen(),
+          '/about': (conetxt) => AboutScreen(),
+        },
+
+        // Theme
+        theme: ThemeData(
+          fontFamily: 'Nunito',
+          bottomAppBarTheme: BottomAppBarTheme(
+            color: Colors.black87,
+          ),
+          brightness: Brightness.dark,
+          textTheme: TextTheme(
+            body1: TextStyle(fontSize: 18),
+            body2: TextStyle(fontSize: 16),
+            button: TextStyle(letterSpacing: 1.5, fontWeight: FontWeight.bold),
+            headline: TextStyle(fontWeight: FontWeight.bold),
+            subhead: TextStyle(color: Colors.grey),
+          ),
+          buttonTheme: ButtonThemeData(),
+        ),
+      ),
+    );
   }
 }
