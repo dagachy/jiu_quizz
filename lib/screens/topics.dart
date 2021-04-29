@@ -143,7 +143,7 @@ class TopicItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Image.asset(
-                  'assets/convers/${topic.img}',
+                  'assets/covers/${topic.img}',
                   fit: BoxFit.contain,
                 ),
                 Row(

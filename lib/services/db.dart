@@ -14,11 +14,11 @@ class Document<T> {
   }
 
   Future<T> getData() {
-    return ref.get().then((v) => Global.models[T](v.data) as T);
+    return ref.get().then((v) => Global.models[T](v.data()) as T);
   }
 
   Stream<T> streamData() {
-    return ref.snapshots().map((v) => Global.models[T](v.data) as T);
+    return ref.snapshots().map((v) => Global.models[T](v.data()) as T);
   }
 
   Future<void> upsert(Map data) {
@@ -36,14 +36,14 @@ class Collection<T> {
   }
 
   Future<List<T>> getData() async {
-    var snapshots = await ref.doc().snapshots();
-    return snapshots.map((doc) => Global.models[T](doc.data) as T).toList();
+    var snapshots = await ref.get();//.doc().snapshots();
+    return snapshots.docs.map((doc) => Global.models[T](doc.data()) as T).toList();
   }
 
   Stream<List<T>> streamData() {
     return ref
         .snapshots()
-        .map((list) => list.docs.map((doc) => Global.models[T](doc.data) as T));
+        .map((list) => list.docs.map((doc) => Global.models[T](doc.data()) as T));
   }
 }
 

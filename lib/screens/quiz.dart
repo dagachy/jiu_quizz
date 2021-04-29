@@ -135,7 +135,7 @@ class CongratsPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           Divider(),
-          Image.asset('assets/contrats.gig'),
+          Image.asset('assets/congrats.gif'),
           Divider(),
           FlatButton.icon(
             color: Colors.green,
@@ -234,7 +234,7 @@ class QuestionPage extends StatelessWidget {
   /// Bottom sheet shown when Question is answered
   _bottomSheet(BuildContext context, Option opt) {
     bool correct = opt.correct;
-    var state = Provider.of<QuizState>(context);
+    var state = Provider.of<QuizState>(context, listen: false);
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
