@@ -30,12 +30,16 @@ class Report {
 
 class Question {
   String text;
+  String type;
+  String typeData;
   List<Option> options;
 
-  Question({this.options, this.text});
+  Question({this.options, this.text, this.type, this.typeData});
 
   Question.fromMap(Map data) {
     text = data['text'] ?? '';
+    type = data['type'] ?? '';
+    typeData = data['data'] ?? '';
     options =
         (data['options'] as List ?? []).map((v) => Option.fromMap(v)).toList();
   }

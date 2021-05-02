@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -9,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import 'services/services.dart';
 import 'screens/screens.dart';
-import 'shared/shared.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,11 +28,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        StreamProvider<Report>.value(value: Global.reportRef.documentStream),
+        StreamProvider<Report>.value(value: Global.reportRef.documentStream, catchError: (_, __) => null),
         StreamProvider<User>.value(value: AuthService().user),
       ],
       child: MaterialApp(
         // Firebase Analytics
+        debugShowCheckedModeBanner: false,
         navigatorObservers: [
           FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
         ],
@@ -49,7 +48,7 @@ class MyApp extends StatelessWidget {
 
         // Theme
         theme: ThemeData(
-          fontFamily: 'Nunito',
+          fontFamily: 'NanumSquareRoundB',
           bottomAppBarTheme: BottomAppBarTheme(
             color: Colors.black87,
           ),

@@ -1,3 +1,5 @@
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'services.dart';
 
@@ -20,4 +22,14 @@ class Global {
   static final Collection<Topic> topicsRef = Collection<Topic>(path: 'topics');
   static final UserData<Report> reportRef =
       UserData<Report>(collection: 'reports');
+  static final AudioCache audioCache = AudioCache();
+  static AudioPlayer audioPlayer;
+
+  static void loopSound(String sound) async {
+    audioPlayer = await audioCache.loop(sound);
+  }
+
+  static void stopLoopSound() {
+    audioPlayer?.stop();
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -30,6 +31,8 @@ class QuizState with ChangeNotifier {
       duration: Duration(microseconds: 500),
       curve: Curves.easeOut,
     );
+    Global.stopLoopSound();
+    Global.loopSound('sounds/ticking.mp3');
   }
 }
 
@@ -106,7 +109,7 @@ class StartPage extends StatelessWidget {
             children: <Widget>[
               FlatButton.icon(
                 onPressed: state.nextPage,
-                label: Text('Start Quiz!'),
+                label: Text('시작하기!'),
                 icon: Icon(Icons.poll),
                 color: Colors.green,
               )
@@ -131,8 +134,9 @@ class CongratsPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Congrats! You completed the ${quiz.title} quiz',
+            '축하해요!\n[ ${quiz.title} ]\n를 완료했어요!\n\n',
             textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline,
           ),
           Divider(),
           Image.asset('assets/congrats.gif'),
@@ -140,7 +144,7 @@ class CongratsPage extends StatelessWidget {
           FlatButton.icon(
             color: Colors.green,
             icon: Icon(FontAwesomeIcons.check),
-            label: Text(' Mark Complete!'),
+            label: Text(' 완료로 표시!'),
             onPressed: () {
               _updateUserReport(quiz);
               Navigator.pushNamedAndRemoveUntil(
@@ -175,31 +179,43 @@ class QuestionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<QuizState>(context);
+    Widget questionWidget;
+    if (question.type == 'image') {
+      questionWidget = _imageQuiz(context);
+    } else if (question.type == 'explanation') {
+      questionWidget = _expQuiz(context);
+    } else if (question.type == 'vocabulary') {
+      questionWidget = _vocaQuiz(context);
+    } else if (question.type == 'meaning') {
+      questionWidget = _meaningQuiz(context);
+    } else if (question.type == 'read') {
+      questionWidget = _readQuiz(context);
+    } else if (question.type == 'write') {
+      questionWidget = _writeQuiz(context);
+    } else {
+      questionWidget = Container();
+    }
 
+    var state = Provider.of<QuizState>(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.all(16),
-            alignment: Alignment.center,
-            child: Text(question.text),
-          ),
-        ),
+        questionWidget,
         Container(
           padding: EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
             children: question.options.map((opt) {
               return Container(
-                height: 90,
                 margin: EdgeInsets.only(bottom: 10),
                 color: Colors.black26,
                 child: InkWell(
                   onTap: () {
                     state.selected = opt;
                     _bottomSheet(context, opt);
+                    opt.correct? Global.audioCache.play('sounds/correct.wav', mode: PlayerMode.LOW_LATENCY)
+                        : Global.audioCache.play('sounds/notcorrect.mp3');
                   },
                   child: Container(
                     padding: EdgeInsets.all(16),
@@ -231,6 +247,136 @@ class QuestionPage extends StatelessWidget {
     );
   }
 
+  Widget _imageQuiz(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(16),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Text(question.text),
+            SizedBox(height: 20),
+            Image.asset(
+              'assets/covers/${question.typeData}',
+              height: 130,
+              fit: BoxFit.fitHeight,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _expQuiz(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(16),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Text(question.text),
+            SizedBox(height: 20),
+            Text(question.typeData,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 90,
+                color: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _vocaQuiz(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(16),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Text(question.text),
+            SizedBox(height: 20),
+            Text(question.typeData,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 80,
+                color: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _meaningQuiz(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(16),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Text(question.text),
+            SizedBox(height: 20),
+            Text(question.typeData,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 80,
+                color: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _readQuiz(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(16),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Text(question.text),
+            SizedBox(height: 20),
+            Text(question.typeData,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _writeQuiz(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(16),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Text(question.text),
+            SizedBox(height: 20),
+            Text(question.typeData,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /// Bottom sheet shown when Question is answered
   _bottomSheet(BuildContext context, Option opt) {
     bool correct = opt.correct;
@@ -245,7 +391,7 @@ class QuestionPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(correct ? 'Good Job!' : 'Wrong'),
+              Text(correct ? '맞았어요!' : '틀렸어요!'),
               Text(
                 opt.detail,
                 style: TextStyle(fontSize: 18, color: Colors.white54),
@@ -253,7 +399,7 @@ class QuestionPage extends StatelessWidget {
               FlatButton(
                 color: correct ? Colors.green : Colors.red,
                 child: Text(
-                  correct ? 'Onward!' : 'Try Again',
+                  correct ? '다음 문제!' : '다시 맞춰봐요',
                   style: TextStyle(
                     color: Colors.white,
                     letterSpacing: 1.5,
@@ -263,6 +409,7 @@ class QuestionPage extends StatelessWidget {
                 onPressed: () {
                   if (correct) {
                     state.nextPage();
+                    Global.audioCache.play('sounds/button.mp3');
                   }
                   Navigator.pop(context);
                 },

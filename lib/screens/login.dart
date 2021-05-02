@@ -16,6 +16,7 @@ class LoginScreenState extends State<LoginScreen> {
     //   _delay();
     //   Navigator.pushReplacementNamed(context, '/topics');
     // }
+    Global.loopSound('sounds/opening.mp3');
   }
 
   Future<void> _delay() async {
@@ -32,22 +33,28 @@ class LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            FlutterLogo(
-              size: 150,
+            Image.asset(
+              'assets/covers/logo.png',
+              height: 280,
+              width: 280,
+              fit: BoxFit.contain,
             ),
+            // FlutterLogo(
+            //   size: 150,
+            // ),
             Text(
-              'Login to Start',
+              '퀴즈풀고 만화보자!',
               style: Theme.of(context).textTheme.headline,
               textAlign: TextAlign.center,
             ),
-            Text('Your Tagline'),
+            Text('선물도 있어요~!'),
             LoginButton(
-              text: 'LOGIN WITH GOOGLE',
+              text: '구글 계정으로 로그인',
               icon: FontAwesomeIcons.google,
               color: Colors.black45,
               loginMethod: auth.googleSignIn,
             ),
-            LoginButton(text: 'Continue as Guest', loginMethod: auth.anonLogin)
+            LoginButton(text: '손님으로 퀴즈 맞추기', loginMethod: auth.anonLogin)
           ],
         ),
       ),
@@ -77,6 +84,8 @@ class LoginButton extends StatelessWidget {
           var user = await loginMethod();
           if (user != null) {
             Navigator.pushReplacementNamed(context, '/topics');
+            Global.stopLoopSound();
+            Global.loopSound('sounds/lobby.mp3');
           }
         },
         label: Expanded(

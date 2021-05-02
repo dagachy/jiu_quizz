@@ -6,7 +6,6 @@ import '../services/services.dart';
 import '../screens/screens.dart';
 import '../shared/shared.dart';
 
-
 class TopicsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class TopicsScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.deepPurple,
-              title: Text('Topics'),
+              title: Text('퀴즈 고르기'),
               actions: [
                 IconButton(
                   icon: Icon(FontAwesomeIcons.userCircle,
@@ -96,11 +95,13 @@ class QuizList extends StatelessWidget {
         margin: EdgeInsets.all(4),
         child: InkWell(
           onTap: () {
+            Global.audioCache.play('sounds/button.mp3');
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (BuildContext context) => QuizScreen(quizId: quiz.id),
               ),
             );
+            Global.stopLoopSound();
           },
           child: Container(
             padding: EdgeInsets.all(8),
@@ -108,6 +109,10 @@ class QuizList extends StatelessWidget {
               title: Text(
                 quiz.title,
                 style: Theme.of(context).textTheme.title,
+              ),
+              subtitle: Text(
+                quiz.description,
+                style: Theme.of(context).textTheme.caption,
               ),
               leading: QuizBadge(topic: topic, quizId: quiz.id),
             ),
@@ -144,7 +149,7 @@ class TopicItem extends StatelessWidget {
               children: [
                 Image.asset(
                   'assets/covers/${topic.img}',
-                  fit: BoxFit.contain,
+                  fit: BoxFit.fitWidth,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
